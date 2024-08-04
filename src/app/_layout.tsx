@@ -1,16 +1,37 @@
+import { COLORS } from "@/constants/Colors";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 import { StatusBar } from "react-native";
 
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
+  const [loaded] = useFonts({
+    pokeSolid: require("../assets/fonts/Pokemon-Solid.ttf"),
+    pokeHollow: require("../assets/fonts/Pokemon-Hollow.ttf"),
+    spaceMono: require("../assets/fonts/SpaceMono-Regular.ttf"),
+  });
+
+  useEffect(() => {
+    if (loaded) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded]);
+
+  if (!loaded) {
+    return null;
+  }
   return (
     <>
-      <StatusBar barStyle={"dark-content"} translucent />
+      <StatusBar barStyle={"light-content"} translucent />
       <Stack
         screenOptions={{
           headerShown: false,
           contentStyle: {
             paddingTop: StatusBar.currentHeight,
-            backgroundColor: "#e8e8e8",
+            backgroundColor: COLORS.background,
           },
         }}
       >
@@ -20,7 +41,7 @@ export default function RootLayout() {
         />
         <Stack.Screen
           name="profile/index"
-          options={{ title: "Profile", animation: "ios" }}
+          options={{ title: "Profile", animation: "slide_from_right" }}
         />
         <Stack.Screen
           name="settings"
