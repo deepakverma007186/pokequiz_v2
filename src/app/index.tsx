@@ -9,6 +9,7 @@ import {
   width,
 } from "@/constants/Responsive";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import { Link } from "expo-router";
 import React from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
@@ -27,12 +28,14 @@ export default function Home(props: Props) {
         </View>
         <Text style={styles.title}>PokeQuiz</Text>
       </View>
-      <Pressable style={styles.startBtnContainer}>
-        <AntDesign name="playcircleo" size={100} color={COLORS.secondary} />
-        <Text style={{ ...styles.text, color: COLORS.secondary }}>
-          Let's Start
-        </Text>
-      </Pressable>
+      <Link href={"/progress"} asChild>
+        <Pressable style={styles.startBtnContainer}>
+          <AntDesign name="playcircleo" size={100} color={COLORS.secondary} />
+          <Text style={{ ...styles.text, color: COLORS.secondary }}>
+            Let's Start
+          </Text>
+        </Pressable>
+      </Link>
       <BottomSection />
     </View>
   );
