@@ -28,7 +28,7 @@ export default function Home(props: Props) {
         </View>
         <Text style={styles.title}>PokeQuiz</Text>
       </View>
-      <Link href={"/progress"} asChild>
+      <Link href={"/game"} asChild>
         <Pressable style={styles.startBtnContainer}>
           <AntDesign name="playcircleo" size={100} color={COLORS.secondary} />
           <Text style={{ ...styles.text, color: COLORS.secondary }}>

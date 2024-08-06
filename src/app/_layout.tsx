@@ -40,10 +40,6 @@ export default function RootLayout() {
           options={{ title: "Home", animation: "simple_push" }}
         />
         <Stack.Screen
-          name="progress"
-          options={{ title: "Progress", animation: "simple_push" }}
-        />
-        <Stack.Screen
           name="game/index"
           options={{ title: "Game", animation: "simple_push" }}
         />

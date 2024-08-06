@@ -21,4 +21,10 @@ export const STYLES = StyleSheet.create({
     alignItems: "center",
     gap: SIZE.sm,
   },
+  justify: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    gap: SIZE.sm,
+  },
 });
