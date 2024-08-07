@@ -7,13 +7,15 @@ import {
 } from "@/constants/Responsive";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
-  Image,
   Pressable,
+  ScrollView,
   StatusBar,
   StyleSheet,
   Text,
   View,
 } from "react-native";
+import ChoosePoints from "./chooseoptions";
+import PokemonPic from "./pokemonpic";
 
 export default function GameScreen() {
   return (
@@ -59,9 +61,14 @@ export default function GameScreen() {
           </Pressable>
         </View>
       </View>
-      <View>
-        <Image />
-      </View>
+      <ScrollView
+        // style={{ flexGrow: 1 }}
+        contentContainerStyle={{ flexGrow: 1, paddingBottom: SIZE.xl }}
+        showsVerticalScrollIndicator={false}
+      >
+        <PokemonPic />
+        <ChoosePoints />
+      </ScrollView>
     </View>
   );
 }
