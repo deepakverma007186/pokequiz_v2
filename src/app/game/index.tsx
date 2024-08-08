@@ -16,8 +16,41 @@ import {
 } from "react-native";
 import ChoosePoints from "./chooseoptions";
 import PokemonPic from "./pokemonpic";
+import useFetchRandomPokemon from "@/hooks/useFetchRandomPokemon";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  decreasePoints,
+  resetPoints,
+  setOptions,
+  setPokemon,
+} from "@/store/gameSlice";
+import { RootState } from "@/store";
+import { useEffect } from "react";
 
 export default function GameScreen() {
+  const { points } = useSelector((state: RootState) => state.gamePokemon);
+  const dispatch = useDispatch();
+  console.log("GameScreen");
+  useEffect(() => {
+    const fetchPokemon = async () => {
+      try {
+        const randromPokemon = await useFetchRandomPokemon();
+        dispatch(
+          setPokemon({
+            name: randromPokemon?.name,
+            imgUri:
+              randromPokemon?.sprites?.other?.["official-artwork"]
+                ?.front_default,
+          })
+        );
+        dispatch(setOptions(randromPokemon));
+      } catch (error) {
+        console.error("Failed to fetch pokemon:", error);
+      }
+    };
+    fetchPokemon();
+  }, []);
+
   return (
     <View
       style={{
@@ -28,10 +61,13 @@ export default function GameScreen() {
       <View style={styles.headerContainer}>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerText}>You scored</Text>
-          <Text style={styles.pointsText}>120</Text>
+          <Text style={styles.pointsText}>{points}</Text>
         </View>
         <View style={STYLES.justify}>
-          <Pressable style={styles.headerBtn}>
+          <Pressable
+            style={styles.headerBtn}
+            onPress={() => dispatch(decreasePoints(5))}
+          >
             <Text
               style={{
                 fontFamily: FONT.mono,
@@ -52,6 +88,7 @@ export default function GameScreen() {
               ...styles.headerBtn,
               backgroundColor: `${COLORS.danger}40`,
             }}
+            onPress={() => dispatch(resetPoints())}
           >
             <MaterialIcons
               name="exit-to-app"
@@ -62,7 +99,6 @@ export default function GameScreen() {
         </View>
       </View>
       <ScrollView
-        // style={{ flexGrow: 1 }}
         contentContainerStyle={{ flexGrow: 1, paddingBottom: SIZE.xl }}
         showsVerticalScrollIndicator={false}
       >

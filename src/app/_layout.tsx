@@ -1,9 +1,11 @@
 import { COLORS } from "@/constants/Colors";
+import { store } from "@/store";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { StatusBar } from "react-native";
+import { Provider } from "react-redux";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,7 +26,7 @@ export default function RootLayout() {
     return null;
   }
   return (
-    <>
+    <Provider store={store}>
       <StatusBar barStyle={"light-content"} translucent />
       <Stack
         screenOptions={{
@@ -64,6 +66,6 @@ export default function RootLayout() {
           options={{ title: "Share", presentation: "modal" }}
         />
       </Stack>
-    </>
+    </Provider>
   );
 }

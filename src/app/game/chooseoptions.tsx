@@ -7,27 +7,29 @@ import {
   moderateScaleVertical,
   textScale,
 } from "@/constants/Responsive";
+import { useSelector } from "react-redux";
+import { RootState } from "@/store";
 
 type Props = {};
 
-export default function ChoosePoints(props: Props) {
-  const fourPokemons = [
-    "top here",
-    "r",
-    "aosdokn45ijdsflksadkfjasddflkjsdf",
-    "bottom here",
-  ];
+const ChoosePoints = React.memo((props: Props) => {
+  const { options: fourPokemons, currentPokemon } = useSelector(
+    (state: RootState) => state.gamePokemon
+  );
+  // console.log(fourPokemons, currentPokemon);
+  console.log("ChoosePoints");
   return (
     <View style={styles.container}>
       {fourPokemons?.map((pokemon, index) => (
         <Pressable key={index} style={styles.btn}>
-          <Text style={styles.text}>{pokemon}</Text>
+          <Text style={styles.text}>{pokemon?.name}</Text>
         </Pressable>
       ))}
     </View>
   );
-}
+});
 
+export default ChoosePoints;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -45,5 +47,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.mono,
     fontSize: textScale(20),
     color: COLORS.secondary,
+    textTransform: "capitalize",
+    textAlign: "center",
   },
 });
