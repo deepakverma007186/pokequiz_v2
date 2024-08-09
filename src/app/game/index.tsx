@@ -10,8 +10,8 @@ import {
 import useNewPokemon from "@/hooks/useNewPokemon";
 import { RootState } from "@/store";
 import {
-  decreasePoints,
-  increasePoints,
+  gainPoints,
+  losePoints,
   removeLastPokemon,
   resetPoints,
 } from "@/store/gameSlice";
@@ -33,6 +33,7 @@ import PokemonPic from "./pokemonpic";
 import SlotMachineDigit from "@/components/game/SlotMachineDigit";
 import LottieView from "lottie-react-native";
 import { ANIMATIONS } from "@/assets/animation";
+import usePositivePoints from "@/hooks/usePositivePoints";
 
 export const LOADING_TIMEOUT: number = 2000;
 
@@ -46,9 +47,10 @@ export default function GameScreen() {
   const [isLoading, setIsLoading] = useState(false);
 
   console.log("GameScreen");
+  const pointsText = usePositivePoints(points);
 
   const handleSkip = useCallback(() => {
-    dispatch(decreasePoints(5));
+    dispatch(losePoints(5));
     dispatch(removeLastPokemon());
     setIsLoading(true);
     fetchNewPokemon();
@@ -69,9 +71,9 @@ export default function GameScreen() {
       if (
         selectedPokemon?.toLowerCase() === currentPokemon?.name?.toLowerCase()
       ) {
-        dispatch(increasePoints(10));
+        dispatch(gainPoints(10));
       } else {
-        dispatch(decreasePoints(5));
+        dispatch(losePoints(5));
       }
       dispatch(removeLastPokemon());
       setIsLoading(true);
@@ -93,16 +95,17 @@ export default function GameScreen() {
       <View style={styles.headerContainer}>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerText}>You scored</Text>
-          {/* <Animated.Text style={[styles.pointsText, pointsAnimationStyle]}>
+          {/* <Text style={styles.pointsText}>
             {points}
-          </Animated.Text> */}
+          </Text> */}
           <View style={{ flexDirection: "row" }}>
-            {String(points)
-              .padStart(4, "0") // Pad points to at least 3 digits
-              .split("")
-              .map((digit, index) => (
-                <SlotMachineDigit key={index} digit={Number(digit)} />
-              ))}
+            {pointsText.map((digit, index) => (
+              <SlotMachineDigit
+                key={index}
+                digit={Number(digit)}
+                actualPoints={points}
+              />
+            ))}
           </View>
         </View>
         <View style={STYLES.justify}>

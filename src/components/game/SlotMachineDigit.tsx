@@ -13,9 +13,11 @@ import Animated, {
 const DIGIT_HEIGHT = 40; // Height of each digit
 type Props = {
   digit: number;
+  actualPoints: number;
 };
-export default function SlotMachineDigit({ digit }: Props) {
+export default function SlotMachineDigit({ digit, actualPoints }: Props) {
   const translateY = useSharedValue(0);
+  const color = actualPoints < 0 ? COLORS.danger : COLORS.secondary;
 
   useEffect(() => {
     // Animate the digit to simulate slot machine rolling
@@ -37,7 +39,7 @@ export default function SlotMachineDigit({ digit }: Props) {
         {[...Array(10).keys()].map((num) => (
           <Text
             key={num}
-            style={{ height: DIGIT_HEIGHT, ...styles.pointsText }}
+            style={{ height: DIGIT_HEIGHT, ...styles.pointsText, color: color }}
           >
             {num}
           </Text>
@@ -51,7 +53,6 @@ const styles = StyleSheet.create({
   pointsText: {
     fontFamily: FONT.solid,
     fontSize: textScale(30),
-    color: COLORS.secondary,
     letterSpacing: SIZE.xs,
   },
 });
