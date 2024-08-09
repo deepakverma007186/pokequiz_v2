@@ -1,9 +1,11 @@
 import { COLORS } from "@/constants/Colors";
 import { FONT, SIZE, STYLES } from "@/constants/CommonStyles";
 import {
+  height,
   moderateScale,
   moderateScaleVertical,
   textScale,
+  width,
 } from "@/constants/Responsive";
 import useNewPokemon from "@/hooks/useNewPokemon";
 import { RootState } from "@/store";
@@ -28,8 +30,11 @@ import {
 import { useDispatch, useSelector } from "react-redux";
 import ChooseOptions from "./chooseoptions";
 import PokemonPic from "./pokemonpic";
+import SlotMachineDigit from "@/components/game/SlotMachineDigit";
+import LottieView from "lottie-react-native";
+import { ANIMATIONS } from "@/assets/animation";
 
-export const LOADING_TIMEOUT: number = 1500;
+export const LOADING_TIMEOUT: number = 2000;
 
 export default function GameScreen() {
   const { points, options, currentPokemon } = useSelector(
@@ -88,7 +93,17 @@ export default function GameScreen() {
       <View style={styles.headerContainer}>
         <View style={{ flex: 1 }}>
           <Text style={styles.headerText}>You scored</Text>
-          <Text style={styles.pointsText}>{points}</Text>
+          {/* <Animated.Text style={[styles.pointsText, pointsAnimationStyle]}>
+            {points}
+          </Animated.Text> */}
+          <View style={{ flexDirection: "row" }}>
+            {String(points)
+              .padStart(4, "0") // Pad points to at least 3 digits
+              .split("")
+              .map((digit, index) => (
+                <SlotMachineDigit key={index} digit={Number(digit)} />
+              ))}
+          </View>
         </View>
         <View style={STYLES.justify}>
           <Pressable style={styles.headerBtn} onPress={handleSkip}>
@@ -128,7 +143,12 @@ export default function GameScreen() {
       >
         <PokemonPic imgUri={currentPokemon?.imgUri} />
         {isLoading ? (
-          <ActivityIndicator size={"large"} />
+          <LottieView
+            style={styles.loading}
+            source={ANIMATIONS.loading}
+            autoPlay
+            loop
+          />
         ) : (
           <ChooseOptions
             fourPokemons={options || []}
@@ -172,5 +192,12 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScaleVertical(8),
     borderRadius: SIZE.lg,
     borderCurve: "continuous",
+  },
+  loading: {
+    position: "absolute",
+    width: SIZE.base * 5,
+    aspectRatio: 1,
+    top: height / 2 - SIZE.base * 5,
+    alignSelf: "center",
   },
 });
