@@ -8,14 +8,46 @@ import {
   textScale,
   width,
 } from "@/constants/Responsive";
+import useFetchRandomPokemon from "@/hooks/useFetchRandomPokemon";
+import { setOptions, setPokemon } from "@/store/gameSlice";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Link } from "expo-router";
-import React from "react";
+import React, { useCallback, useEffect } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
+import { useDispatch } from "react-redux";
 
 type Props = {};
 
 export default function Home(props: Props) {
+  const dispatch = useDispatch();
+  const fetchPokemon = useCallback(async () => {
+    console.log("fetchPokemon function all");
+    try {
+      const randromPokemon = await useFetchRandomPokemon();
+      dispatch(
+        setPokemon({
+          name: randromPokemon?.name,
+          imgUri:
+            randromPokemon?.sprites?.other?.["official-artwork"]?.front_default,
+        })
+      );
+      dispatch(setOptions(randromPokemon));
+    } catch (error) {
+      console.error("Failed to fetch pokemon:", error);
+    }
+  }, []);
+
+  useEffect(() => {
+    let isMounted = true; // Add a flag to track if the component is still mounted
+
+    if (isMounted) {
+      fetchPokemon();
+    }
+
+    return () => {
+      isMounted = false; // Set the flag to false when the component unmounts
+    };
+  }, []);
   return (
     <View style={styles.container}>
       <View style={[STYLES.flexRow, styles.titleLogo]}>

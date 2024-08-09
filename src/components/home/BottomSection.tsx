@@ -6,16 +6,19 @@ import {
   textScale,
   width,
 } from "@/constants/Responsive";
+import { RootState } from "@/store";
 import Entypo from "@expo/vector-icons/Entypo";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import { Link } from "expo-router";
 import React from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useSelector } from "react-redux";
 
 type Props = {};
 
 export default function BottomSection(props: Props) {
+  const { points } = useSelector((state: RootState) => state.gamePokemon);
   return (
     <View style={styles.bottomSection}>
       <Link href={"/profile"} asChild>
@@ -55,7 +58,7 @@ export default function BottomSection(props: Props) {
         </Link>
       </View>
       <View style={styles.highScoreContainer}>
-        <Text style={styles.scoreText}>High Score • 120</Text>
+        <Text style={styles.scoreText}>High Score • {points}</Text>
       </View>
     </View>
   );

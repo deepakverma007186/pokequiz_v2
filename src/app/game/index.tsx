@@ -5,8 +5,19 @@ import {
   moderateScaleVertical,
   textScale,
 } from "@/constants/Responsive";
-import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import useNewPokemon from "@/hooks/useNewPokemon";
+import { RootState } from "@/store";
 import {
+  decreasePoints,
+  increasePoints,
+  removeLastPokemon,
+  resetPoints,
+} from "@/store/gameSlice";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
+import { useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
+import {
+  ActivityIndicator,
   Pressable,
   ScrollView,
   StatusBar,
@@ -14,42 +25,58 @@ import {
   Text,
   View,
 } from "react-native";
-import ChoosePoints from "./chooseoptions";
-import PokemonPic from "./pokemonpic";
-import useFetchRandomPokemon from "@/hooks/useFetchRandomPokemon";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  decreasePoints,
-  resetPoints,
-  setOptions,
-  setPokemon,
-} from "@/store/gameSlice";
-import { RootState } from "@/store";
-import { useEffect } from "react";
+import ChooseOptions from "./chooseoptions";
+import PokemonPic from "./pokemonpic";
+
+export const LOADING_TIMEOUT: number = 1500;
 
 export default function GameScreen() {
-  const { points } = useSelector((state: RootState) => state.gamePokemon);
+  const { points, options, currentPokemon } = useSelector(
+    (state: RootState) => state.gamePokemon
+  );
   const dispatch = useDispatch();
+  const fetchNewPokemon = useNewPokemon();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(false);
+
   console.log("GameScreen");
-  useEffect(() => {
-    const fetchPokemon = async () => {
-      try {
-        const randromPokemon = await useFetchRandomPokemon();
-        dispatch(
-          setPokemon({
-            name: randromPokemon?.name,
-            imgUri:
-              randromPokemon?.sprites?.other?.["official-artwork"]
-                ?.front_default,
-          })
-        );
-        dispatch(setOptions(randromPokemon));
-      } catch (error) {
-        console.error("Failed to fetch pokemon:", error);
+
+  const handleSkip = useCallback(() => {
+    dispatch(decreasePoints(5));
+    dispatch(removeLastPokemon());
+    setIsLoading(true);
+    fetchNewPokemon();
+    setTimeout(() => {
+      setIsLoading(false);
+    }, LOADING_TIMEOUT);
+  }, [dispatch, fetchNewPokemon]);
+
+  const handleResetPoints = useCallback(() => {
+    dispatch(resetPoints());
+    dispatch(removeLastPokemon());
+    router.replace("/");
+  }, [dispatch]);
+
+  const handleOptionSelect = useCallback(
+    (selectedPokemon: string) => {
+      console.log(selectedPokemon);
+      if (
+        selectedPokemon?.toLowerCase() === currentPokemon?.name?.toLowerCase()
+      ) {
+        dispatch(increasePoints(10));
+      } else {
+        dispatch(decreasePoints(5));
       }
-    };
-    fetchPokemon();
-  }, []);
+      dispatch(removeLastPokemon());
+      setIsLoading(true);
+      fetchNewPokemon();
+      setTimeout(() => {
+        setIsLoading(false);
+      }, LOADING_TIMEOUT);
+    },
+    [dispatch, currentPokemon?.name]
+  );
 
   return (
     <View
@@ -64,10 +91,7 @@ export default function GameScreen() {
           <Text style={styles.pointsText}>{points}</Text>
         </View>
         <View style={STYLES.justify}>
-          <Pressable
-            style={styles.headerBtn}
-            onPress={() => dispatch(decreasePoints(5))}
-          >
+          <Pressable style={styles.headerBtn} onPress={handleSkip}>
             <Text
               style={{
                 fontFamily: FONT.mono,
@@ -88,7 +112,7 @@ export default function GameScreen() {
               ...styles.headerBtn,
               backgroundColor: `${COLORS.danger}40`,
             }}
-            onPress={() => dispatch(resetPoints())}
+            onPress={handleResetPoints}
           >
             <MaterialIcons
               name="exit-to-app"
@@ -102,8 +126,16 @@ export default function GameScreen() {
         contentContainerStyle={{ flexGrow: 1, paddingBottom: SIZE.xl }}
         showsVerticalScrollIndicator={false}
       >
-        <PokemonPic />
-        <ChoosePoints />
+        <PokemonPic imgUri={currentPokemon?.imgUri} />
+        {isLoading ? (
+          <ActivityIndicator size={"large"} />
+        ) : (
+          <ChooseOptions
+            fourPokemons={options || []}
+            onOptionSelect={handleOptionSelect}
+            isLoading={isLoading}
+          />
+        )}
       </ScrollView>
     </View>
   );

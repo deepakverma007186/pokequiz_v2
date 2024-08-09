@@ -1,24 +1,23 @@
 import { SIZE } from "@/constants/CommonStyles";
 import { width } from "@/constants/Responsive";
-import { RootState } from "@/store";
-import React from "react";
+import React, { memo } from "react";
 import { Image, StyleSheet, View } from "react-native";
-import { useSelector } from "react-redux";
 
-const PokemonPic = React.memo(() => {
-  const { currentPokemon } = useSelector(
-    (state: RootState) => state.gamePokemon
-  );
+type props = {
+  imgUri: string | undefined;
+};
+
+const PokemonPic = ({ imgUri }: props) => {
   console.log("PokemonPic");
 
   return (
     <View style={styles.container}>
-      <Image source={{ uri: currentPokemon?.imgUri }} style={styles.img} />
+      <Image source={{ uri: imgUri }} style={styles.img} />
     </View>
   );
-});
+};
 
-export default PokemonPic;
+export default memo(PokemonPic);
 
 const styles = StyleSheet.create({
   container: {

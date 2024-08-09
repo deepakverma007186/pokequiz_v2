@@ -1,35 +1,41 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React from "react";
-import { FONT, SIZE } from "@/constants/CommonStyles";
 import { COLORS } from "@/constants/Colors";
+import { FONT, SIZE } from "@/constants/CommonStyles";
 import {
   moderateScale,
   moderateScaleVertical,
   textScale,
 } from "@/constants/Responsive";
-import { useSelector } from "react-redux";
-import { RootState } from "@/store";
+import { Pokemon } from "@/types";
+import React, { memo } from "react";
+import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
 
-type Props = {};
+type Props = {
+  fourPokemons: Pokemon[];
+  onOptionSelect: (selectedPokemon: string) => void;
+  isLoading: boolean;
+};
 
-const ChoosePoints = React.memo((props: Props) => {
-  const { options: fourPokemons, currentPokemon } = useSelector(
-    (state: RootState) => state.gamePokemon
-  );
-  // console.log(fourPokemons, currentPokemon);
-  console.log("ChoosePoints");
+const ChooseOptions = ({ fourPokemons, onOptionSelect, isLoading }: Props) => {
+  console.log("ChooseOptions", fourPokemons);
+
   return (
     <View style={styles.container}>
-      {fourPokemons?.map((pokemon, index) => (
-        <Pressable key={index} style={styles.btn}>
-          <Text style={styles.text}>{pokemon?.name}</Text>
-        </Pressable>
-      ))}
+      {!isLoading &&
+        fourPokemons?.map((pokemon, index) => (
+          <TouchableOpacity
+            key={index}
+            style={styles.btn}
+            onPress={() => onOptionSelect(pokemon?.name)}
+          >
+            <Text style={styles.text}>{pokemon?.name}</Text>
+          </TouchableOpacity>
+        ))}
     </View>
   );
-});
+};
 
-export default ChoosePoints;
+export default memo(ChooseOptions);
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,

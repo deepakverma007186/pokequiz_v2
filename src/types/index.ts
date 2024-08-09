@@ -4,7 +4,7 @@ export type Pokemon = {
 };
 
 export type GameState = {
-  currentPokemon: Pokemon | null;
-  options: Pokemon[];
+  currentPokemon?: Pokemon;
+  options?: Pokemon[];
   points: number;
 };

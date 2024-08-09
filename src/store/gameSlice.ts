@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import pokemonList from "@/constants/pokemon.json";
 
 const initialState: GameState = {
-  currentPokemon: null,
+  currentPokemon: undefined,
   options: [],
   points: 330,
 };
@@ -12,7 +12,7 @@ const gameSlice = createSlice({
   name: "game",
   initialState,
   reducers: {
-    setPokemon: (state, action: PayloadAction<Pokemon>) => {
+    setPokemon: (state, action: PayloadAction<Pokemon | undefined>) => {
       state.currentPokemon = action.payload;
     },
     setOptions: (state, action: PayloadAction<Pokemon>) => {
@@ -39,6 +39,10 @@ const gameSlice = createSlice({
     resetPoints: (state) => {
       state.points = 0;
     },
+    removeLastPokemon: (state) => {
+      state.currentPokemon = undefined;
+      state.options = [];
+    },
   },
 });
 
@@ -48,6 +52,7 @@ export const {
   resetPoints,
   setOptions,
   setPokemon,
+  removeLastPokemon,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;
