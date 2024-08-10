@@ -86,9 +86,10 @@ const styles = StyleSheet.create({
     columnGap: SIZE.lg,
   },
   title: {
-    fontFamily: FONT.outline,
+    fontFamily: FONT.solid,
     fontSize: textScale(SIZE.xl * 2),
     color: COLORS.secondary,
+    letterSpacing: 2,
   },
   text: {
     fontFamily: FONT.mono,

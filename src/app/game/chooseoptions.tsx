@@ -1,3 +1,4 @@
+import { LOADING_TIMEOUT } from "@/constants";
 import { COLORS } from "@/constants/Colors";
 import { FONT, SIZE } from "@/constants/CommonStyles";
 import {
@@ -5,18 +6,47 @@ import {
   moderateScaleVertical,
   textScale,
 } from "@/constants/Responsive";
+import useNewPokemon from "@/hooks/useNewPokemon";
+import {
+  gainPoints,
+  losePoints,
+  removeLastPokemon,
+  setIsLoading,
+} from "@/store/gameSlice";
 import { Pokemon } from "@/types";
-import React, { memo } from "react";
+import React, { memo, useCallback } from "react";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useDispatch } from "react-redux";
 
 type Props = {
   fourPokemons: Pokemon[];
-  onOptionSelect: (selectedPokemon: string) => void;
   isLoading: boolean;
+  currentPokemon?: Pokemon;
 };
 
-const ChooseOptions = ({ fourPokemons, onOptionSelect, isLoading }: Props) => {
-  console.log("ChooseOptions", fourPokemons);
+const ChooseOptions = ({ fourPokemons, isLoading, currentPokemon }: Props) => {
+  const dispatch = useDispatch();
+  const fetchNewPokemon = useNewPokemon();
+  console.log(fourPokemons);
+
+  const handleOptionSelect = useCallback(
+    (selectedPokemon: string) => {
+      const isMatching =
+        selectedPokemon?.toLowerCase() === currentPokemon?.name?.toLowerCase();
+      if (isMatching) {
+        dispatch(gainPoints(10));
+      } else {
+        dispatch(losePoints(5));
+      }
+      dispatch(removeLastPokemon());
+      dispatch(setIsLoading(true));
+      fetchNewPokemon();
+      setTimeout(() => {
+        dispatch(setIsLoading(false));
+      }, LOADING_TIMEOUT);
+    },
+    [dispatch, currentPokemon?.name]
+  );
 
   return (
     <View style={styles.container}>
@@ -25,7 +55,7 @@ const ChooseOptions = ({ fourPokemons, onOptionSelect, isLoading }: Props) => {
           <TouchableOpacity
             key={index}
             style={styles.btn}
-            onPress={() => onOptionSelect(pokemon?.name)}
+            onPress={() => handleOptionSelect(pokemon?.name)}
           >
             <Text style={styles.text}>{pokemon?.name}</Text>
           </TouchableOpacity>

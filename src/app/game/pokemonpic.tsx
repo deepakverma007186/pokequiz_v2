@@ -8,8 +8,6 @@ type props = {
 };
 
 const PokemonPic = ({ imgUri }: props) => {
-  console.log("PokemonPic");
-
   return (
     <View style={styles.container}>
       <Image source={{ uri: imgUri }} style={styles.img} />

@@ -43,7 +43,7 @@ export default function RootLayout() {
         />
         <Stack.Screen
           name="game/index"
-          options={{ title: "Game", animation: "simple_push" }}
+          options={{ title: "Game", animation: "slide_from_right" }}
         />
         <Stack.Screen
           name="profile/index"

@@ -91,7 +91,7 @@ const styles = StyleSheet.create({
   encycloBtnText: {
     fontSize: textScale(24),
     color: COLORS.secondary,
-    fontFamily: FONT.solid,
+    fontFamily: FONT.mono,
   },
   bottomSection: {
     position: "absolute",
