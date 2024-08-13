@@ -47,13 +47,13 @@ const gameSlice = createSlice({
     losePoints: (state, action: PayloadAction<number>) => {
       state.points -= action.payload;
       state.lifeCount -= 1;
-      if (state.lifeCount < 1) {
-        state.currentPokemon = undefined;
-        state.options = [];
-        state.points = 100;
-        state.lifeCount = 3;
-        state.skipCount = 0;
-      }
+      // if (state.lifeCount < 1) {
+      //   state.currentPokemon = undefined;
+      //   state.options = [];
+      //   state.points = 100;
+      //   state.lifeCount = 3;
+      //   state.skipCount = 0;
+      // }
     },
     resetGame: (state) => {
       state.currentPokemon = undefined;
@@ -77,13 +77,13 @@ const gameSlice = createSlice({
         state.skipCount = 0;
       }
 
-      if (state.lifeCount < 1) {
-        state.currentPokemon = undefined;
-        state.options = [];
-        state.points = 100;
-        state.lifeCount = 3;
-        state.skipCount = 0;
-      }
+      // if (state.lifeCount < 1) {
+      //   state.currentPokemon = undefined;
+      //   state.options = [];
+      //   state.points = 100;
+      //   state.lifeCount = 3;
+      //   state.skipCount = 0;
+      // }
     },
   },
 });

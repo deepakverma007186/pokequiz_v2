@@ -23,26 +23,33 @@ import { useDispatch } from "react-redux";
 type Props = {
   points: number;
   lifeCount: number;
+  handleBottomSheet: () => void;
 };
 
-const PokeHeader = ({ points, lifeCount }: Props) => {
+const PokeHeader = ({ points, lifeCount, handleBottomSheet }: Props) => {
+  console.log("🚀 ~ PokeHeader ~ lifeCount:", lifeCount);
   const dispatch = useDispatch();
   const fetchNewPokemon = useNewPokemon();
   const router = useRouter();
   const pointsText = usePositivePoints(points);
 
   const handleSkip = useCallback(() => {
+    if (lifeCount <= 0) {
+      handleBottomSheet();
+      return;
+    }
     dispatch(skippedCurrentPokemon(5));
     dispatch(setIsLoading(true));
     fetchNewPokemon();
     setTimeout(() => {
       dispatch(setIsLoading(false));
     }, LOADING_TIMEOUT);
-  }, [dispatch, fetchNewPokemon]);
+  }, [dispatch, fetchNewPokemon, lifeCount]);
 
   const handleReset = useCallback(() => {
-    dispatch(resetGame());
-    router.replace("/");
+    // dispatch(resetGame());
+    // router.replace("/");
+    handleBottomSheet();
   }, [dispatch]);
 
   return (

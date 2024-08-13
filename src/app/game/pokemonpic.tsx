@@ -10,7 +10,7 @@ type props = {
 const PokemonPic = ({ imgUri }: props) => {
   return (
     <View style={styles.container}>
-      <Image source={{ uri: imgUri }} style={styles.img} />
+      {imgUri && <Image source={{ uri: imgUri }} style={styles.img} />}
     </View>
   );
 };

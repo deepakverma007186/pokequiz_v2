@@ -1,10 +1,12 @@
 import { COLORS } from "@/constants/Colors";
 import { store } from "@/store";
+import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import { StatusBar } from "react-native";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { Provider } from "react-redux";
 
 SplashScreen.preventAutoHideAsync();
@@ -26,46 +28,53 @@ export default function RootLayout() {
     return null;
   }
   return (
-    <Provider store={store}>
-      <StatusBar barStyle={"light-content"} translucent />
-      <Stack
-        screenOptions={{
-          headerShown: false,
-          contentStyle: {
-            paddingTop: StatusBar.currentHeight,
-            backgroundColor: COLORS.background,
-          },
-        }}
-      >
-        <Stack.Screen
-          name="index"
-          options={{ title: "Home", animation: "simple_push" }}
-        />
-        <Stack.Screen
-          name="game/index"
-          options={{ title: "Game", animation: "slide_from_right" }}
-        />
-        <Stack.Screen
-          name="profile/index"
-          options={{ title: "Profile", animation: "slide_from_right" }}
-        />
-        <Stack.Screen
-          name="settings"
-          options={{ title: "Settings", animation: "slide_from_left" }}
-        />
-        <Stack.Screen
-          name="score/index"
-          options={{ title: "Score", animation: "slide_from_bottom" }}
-        />
-        <Stack.Screen
-          name="rules"
-          options={{ title: "Rules", animation: "slide_from_right" }}
-        />
-        <Stack.Screen
-          name="share"
-          options={{ title: "Share", presentation: "modal" }}
-        />
-      </Stack>
-    </Provider>
+    <GestureHandlerRootView style={{ flex: 1 }}>
+      <Provider store={store}>
+        <BottomSheetModalProvider>
+          <StatusBar barStyle={"light-content"} translucent />
+          <Stack
+            screenOptions={{
+              headerShown: false,
+              contentStyle: {
+                paddingTop: StatusBar.currentHeight,
+                backgroundColor: COLORS.background,
+              },
+            }}
+          >
+            <Stack.Screen
+              name="index"
+              options={{
+                title: "Home",
+                animationTypeForReplace: "pop",
+              }}
+            />
+            <Stack.Screen
+              name="game/index"
+              options={{ title: "Game", animation: "slide_from_right" }}
+            />
+            <Stack.Screen
+              name="profile/index"
+              options={{ title: "Profile", animation: "slide_from_right" }}
+            />
+            <Stack.Screen
+              name="settings"
+              options={{ title: "Settings", animation: "slide_from_left" }}
+            />
+            <Stack.Screen
+              name="score/index"
+              options={{ title: "Score", animation: "slide_from_bottom" }}
+            />
+            <Stack.Screen
+              name="rules"
+              options={{ title: "Rules", animation: "slide_from_right" }}
+            />
+            <Stack.Screen
+              name="share"
+              options={{ title: "Share", presentation: "modal" }}
+            />
+          </Stack>
+        </BottomSheetModalProvider>
+      </Provider>
+    </GestureHandlerRootView>
   );
 }
