@@ -1,11 +1,11 @@
-import { COLORS } from "@/constants/Colors";
-import { FONT, SIZE, STYLES } from "@/constants/CommonStyles";
+import { COLORS } from "@/utils/Colors";
+import { FONT, SIZE, STYLES } from "@/utils/CommonStyles";
 import {
   moderateScale,
   moderateScaleVertical,
   textScale,
   width,
-} from "@/constants/Responsive";
+} from "@/utils/Responsive";
 import { RootState } from "@/store";
 import Entypo from "@expo/vector-icons/Entypo";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
@@ -18,7 +18,7 @@ import { useSelector } from "react-redux";
 type Props = {};
 
 export default function BottomSection(props: Props) {
-  const { points } = useSelector((state: RootState) => state.gamePokemon);
+  const { highScore } = useSelector((state: RootState) => state.gamePokemon);
   return (
     <View style={styles.bottomSection}>
       <Link href={"/profile"} asChild>
@@ -58,7 +58,7 @@ export default function BottomSection(props: Props) {
         </Link>
       </View>
       <View style={styles.highScoreContainer}>
-        <Text style={styles.scoreText}>High Score • {points}</Text>
+        <Text style={styles.scoreText}>High Score • {highScore}</Text>
       </View>
     </View>
   );

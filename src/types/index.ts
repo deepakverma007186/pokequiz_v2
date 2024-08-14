@@ -10,4 +10,5 @@ export type GameState = {
   lifeCount: number;
   skipCount: number;
   isLoading: boolean;
+  highScore: number;
 };

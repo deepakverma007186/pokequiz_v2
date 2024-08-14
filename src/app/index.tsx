@@ -1,18 +1,18 @@
 import { IMG } from "@/assets/images";
 import BottomSection from "@/components/home/BottomSection";
-import { COLORS } from "@/constants/Colors";
-import { FONT, SIZE, STYLES } from "@/constants/CommonStyles";
+import useFetchRandomPokemon from "@/hooks/useFetchRandomPokemon";
+import { setOptions, setPokemon } from "@/store/gameSlice";
+import { COLORS } from "@/utils/Colors";
+import { FONT, SIZE, STYLES } from "@/utils/CommonStyles";
 import {
   height,
   moderateScaleVertical,
   textScale,
   width,
-} from "@/constants/Responsive";
-import useFetchRandomPokemon from "@/hooks/useFetchRandomPokemon";
-import { setOptions, setPokemon } from "@/store/gameSlice";
+} from "@/utils/Responsive";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Link } from "expo-router";
-import React, { useCallback, useEffect } from "react";
+import React, { useCallback } from "react";
 import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
 
@@ -20,6 +20,7 @@ type Props = {};
 
 export default function Home(props: Props) {
   const dispatch = useDispatch();
+
   const fetchPokemon = useCallback(async () => {
     console.log("fetchPokemon function all");
     try {
@@ -37,17 +38,6 @@ export default function Home(props: Props) {
     }
   }, []);
 
-  useEffect(() => {
-    let isMounted = true; // Add a flag to track if the component is still mounted
-
-    if (isMounted) {
-      fetchPokemon();
-    }
-
-    return () => {
-      isMounted = false; // Set the flag to false when the component unmounts
-    };
-  }, []);
   return (
     <View style={styles.container}>
       <View style={[STYLES.flexRow, styles.titleLogo]}>
@@ -61,7 +51,7 @@ export default function Home(props: Props) {
         <Text style={styles.title}>PokeQuiz</Text>
       </View>
       <Link href={"/game"} asChild>
-        <Pressable style={styles.startBtnContainer}>
+        <Pressable style={styles.startBtnContainer} onPress={fetchPokemon}>
           <AntDesign name="playcircleo" size={100} color={COLORS.secondary} />
           <Text style={{ ...styles.text, color: COLORS.secondary }}>
             Let's Start

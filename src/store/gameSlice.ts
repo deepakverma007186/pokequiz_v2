@@ -1,14 +1,16 @@
-import { GameState, Pokemon } from "@/types";
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import pokemonList from "@/constants/pokemon.json";
+import { GameState, Pokemon } from "@/types";
+import { INITIAL_LIFE_COUNT, INITIAL_POINTS } from "@/utils";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 const initialState: GameState = {
   currentPokemon: undefined,
   options: [],
-  points: 100,
-  lifeCount: 3,
+  points: INITIAL_POINTS,
+  lifeCount: INITIAL_LIFE_COUNT,
   skipCount: 0,
   isLoading: false,
+  highScore: 0,
 };
 
 const gameSlice = createSlice({
@@ -47,19 +49,12 @@ const gameSlice = createSlice({
     losePoints: (state, action: PayloadAction<number>) => {
       state.points -= action.payload;
       state.lifeCount -= 1;
-      // if (state.lifeCount < 1) {
-      //   state.currentPokemon = undefined;
-      //   state.options = [];
-      //   state.points = 100;
-      //   state.lifeCount = 3;
-      //   state.skipCount = 0;
-      // }
     },
     resetGame: (state) => {
       state.currentPokemon = undefined;
       state.options = [];
-      state.points = 100;
-      state.lifeCount = 3;
+      state.points = INITIAL_POINTS;
+      state.lifeCount = INITIAL_LIFE_COUNT;
       state.skipCount = 0;
     },
     removeLastPokemon: (state) => {
@@ -76,14 +71,11 @@ const gameSlice = createSlice({
         state.lifeCount -= 1;
         state.skipCount = 0;
       }
-
-      // if (state.lifeCount < 1) {
-      //   state.currentPokemon = undefined;
-      //   state.options = [];
-      //   state.points = 100;
-      //   state.lifeCount = 3;
-      //   state.skipCount = 0;
-      // }
+    },
+    setHighScore: (state) => {
+      if (state.points >= state.highScore) {
+        state.highScore = state.points;
+      }
     },
   },
 });
@@ -97,6 +89,7 @@ export const {
   removeLastPokemon,
   skippedCurrentPokemon,
   setIsLoading,
+  setHighScore,
 } = gameSlice.actions;
 
 export default gameSlice.reducer;

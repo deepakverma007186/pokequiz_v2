@@ -11,4 +11,5 @@ export const COLORS = {
   white: "#ffffff",
   danger: "#F5004F",
   loading: "teal",
+  transparent: "transparent",
 };

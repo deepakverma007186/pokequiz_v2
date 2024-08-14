@@ -1,36 +1,55 @@
-import { Pressable, StyleSheet, Text, View } from "react-native";
-import React, { useCallback } from "react";
-import { FONT, SIZE } from "@/constants/CommonStyles";
-import { COLORS } from "@/constants/Colors";
-import { textScale } from "@/constants/Responsive";
-import { useRouter } from "expo-router";
-import { useDispatch } from "react-redux";
+import { COLORS } from "@/utils/Colors";
+import { FONT, SIZE, STYLES } from "@/utils/CommonStyles";
+import { textScale } from "@/utils/Responsive";
 import { resetGame } from "@/store/gameSlice";
+import { SimpleLineIcons } from "@expo/vector-icons";
+import { useRouter } from "expo-router";
+import React, { useCallback } from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
+import { useDispatch } from "react-redux";
+import { useGameState } from "@/utils/selectors";
+import { LOADING_TIMEOUT } from "@/utils";
 
-export default function GameSheet() {
+type Props = {
+  handleDismissBottomSheet: () => void;
+};
+
+export default function GameSheet({ handleDismissBottomSheet }: Props) {
+  const { points, lifeCount } = useGameState();
   const dispatch = useDispatch();
   const router = useRouter();
-  const handleContinue = () => {
-    return;
-  };
+  console.log(lifeCount, "lifeCount");
+
+  const handleContinue = useCallback(() => {
+    handleDismissBottomSheet();
+  }, []);
   const handleLeave = useCallback(() => {
     router.replace("/");
-    dispatch(resetGame());
+    setTimeout(() => {
+      dispatch(resetGame());
+    }, LOADING_TIMEOUT);
   }, []);
   return (
     <View style={styles.container}>
       <Text style={styles.title}>PokeQuiz Score</Text>
-      <Text style={styles.scoreText}>200</Text>
+      <Text style={styles.scoreText}>{points}</Text>
       <View style={styles.btnContainer}>
         <Pressable
           style={[styles.btn, { backgroundColor: COLORS.background }]}
           onPress={handleLeave}
         >
+          <SimpleLineIcons
+            name="logout"
+            size={SIZE.base}
+            color={COLORS.white}
+          />
           <Text style={[styles.btnText, { color: COLORS.white }]}>Leave</Text>
         </Pressable>
-        <Pressable style={styles.btn} onPress={handleContinue}>
-          <Text style={styles.btnText}>Continue</Text>
-        </Pressable>
+        {lifeCount >= 0 && (
+          <Pressable style={styles.btn} onPress={handleContinue}>
+            <Text style={styles.btnText}>Continue</Text>
+          </Pressable>
+        )}
       </View>
     </View>
   );
@@ -55,7 +74,7 @@ const styles = StyleSheet.create({
     fontFamily: FONT.solid,
     fontSize: textScale(60),
     color: COLORS.secondary,
-    letterSpacing: 2,
+    letterSpacing: 4,
   },
   btnContainer: {
     flexDirection: "row",
@@ -68,6 +87,7 @@ const styles = StyleSheet.create({
     flex: 1,
     borderRadius: 10,
     borderCurve: "continuous",
+    ...STYLES.flexRow,
   },
   quitBtn: {
     backgroundColor: COLORS.primary,

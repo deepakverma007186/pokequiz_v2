@@ -1,9 +1,9 @@
 import GameSheet from "@/components/GameSheet";
 import Loading from "@/components/Loading";
-import { COLORS } from "@/constants/Colors";
-import { SIZE } from "@/constants/CommonStyles";
-import { width } from "@/constants/Responsive";
-import { RootState } from "@/store";
+import { COLORS } from "@/utils/Colors";
+import { SIZE } from "@/utils/CommonStyles";
+import { width } from "@/utils/Responsive";
+import { useGameState } from "@/utils/selectors";
 import { BottomSheetBackdrop, BottomSheetModal } from "@gorhom/bottom-sheet";
 import React, { useCallback, useEffect, useMemo, useRef } from "react";
 import {
@@ -13,19 +13,17 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { useSelector } from "react-redux";
 import ChooseOptions from "./chooseoptions";
 import PokeHeader from "./header";
 import PokemonPic from "./pokemonpic";
 
 export default function GameScreen() {
-  const { isLoading, points, lifeCount, currentPokemon, options } = useSelector(
-    (state: RootState) => state.gamePokemon
-  );
+  const { isLoading } = useGameState();
   const bottomSheetRef = useRef<BottomSheetModal>(null);
   const snapPoints = useMemo(() => ["40%"], []);
 
   const handleBottomSheet = () => bottomSheetRef.current?.present();
+  const handleDismissBottomSheet = () => bottomSheetRef.current?.dismiss();
 
   const renderBackDrop = useCallback((props: any) => {
     return (
@@ -52,24 +50,16 @@ export default function GameScreen() {
 
   return (
     <View style={styles.container}>
-      <PokeHeader
-        lifeCount={lifeCount}
-        points={points}
-        handleBottomSheet={handleBottomSheet}
-      />
+      <PokeHeader handleBottomSheet={handleBottomSheet} />
       <ScrollView
         contentContainerStyle={{ flexGrow: 1, paddingBottom: SIZE.xl }}
         showsVerticalScrollIndicator={false}
       >
-        <PokemonPic imgUri={currentPokemon?.imgUri} />
+        <PokemonPic />
         {isLoading ? (
           <Loading />
         ) : (
-          <ChooseOptions
-            fourPokemons={options || []}
-            isLoading={isLoading}
-            currentPokemon={currentPokemon}
-          />
+          <ChooseOptions handleBottomSheet={handleBottomSheet} />
         )}
       </ScrollView>
       <BottomSheetModal
@@ -84,7 +74,7 @@ export default function GameScreen() {
         }}
         backdropComponent={renderBackDrop}
       >
-        <GameSheet />
+        <GameSheet handleDismissBottomSheet={handleDismissBottomSheet} />
       </BottomSheetModal>
     </View>
   );

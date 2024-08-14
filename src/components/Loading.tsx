@@ -1,5 +1,5 @@
 import { ANIMATIONS } from "@/assets/animation";
-import { SIZE } from "@/constants/CommonStyles";
+import { SIZE } from "@/utils/CommonStyles";
 import LottieView from "lottie-react-native";
 import { StyleSheet, View } from "react-native";
 

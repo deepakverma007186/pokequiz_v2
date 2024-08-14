@@ -1,4 +1,4 @@
-import { COLORS } from "@/constants/Colors";
+import { COLORS } from "@/utils/Colors";
 import { store } from "@/store";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";

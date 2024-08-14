@@ -1,16 +1,16 @@
-import { SIZE } from "@/constants/CommonStyles";
-import { width } from "@/constants/Responsive";
+import { SIZE } from "@/utils/CommonStyles";
+import { width } from "@/utils/Responsive";
+import { useGameState } from "@/utils/selectors";
 import React, { memo } from "react";
 import { Image, StyleSheet, View } from "react-native";
 
-type props = {
-  imgUri: string | undefined;
-};
-
-const PokemonPic = ({ imgUri }: props) => {
+const PokemonPic = () => {
+  const { currentPokemon } = useGameState();
   return (
     <View style={styles.container}>
-      {imgUri && <Image source={{ uri: imgUri }} style={styles.img} />}
+      {currentPokemon && (
+        <Image source={{ uri: currentPokemon?.imgUri }} style={styles.img} />
+      )}
     </View>
   );
 };

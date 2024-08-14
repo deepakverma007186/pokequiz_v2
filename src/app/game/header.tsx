@@ -1,40 +1,46 @@
 import SlotMachineDigit from "@/components/game/SlotMachineDigit";
-import { LOADING_TIMEOUT } from "@/constants";
-import { COLORS } from "@/constants/Colors";
-import { FONT, SIZE, STYLES } from "@/constants/CommonStyles";
+import { LOADING_TIMEOUT } from "@/utils";
+import { COLORS } from "@/utils/Colors";
+import { FONT, SIZE, STYLES } from "@/utils/CommonStyles";
 import {
   moderateScale,
   moderateScaleVertical,
   textScale,
-} from "@/constants/Responsive";
+} from "@/utils/Responsive";
 import useNewPokemon from "@/hooks/useNewPokemon";
 import usePositivePoints from "@/hooks/usePositivePoints";
 import {
-  resetGame,
+  losePoints,
+  setHighScore,
   setIsLoading,
   skippedCurrentPokemon,
 } from "@/store/gameSlice";
-import { AntDesign, MaterialIcons } from "@expo/vector-icons";
-import { useRouter } from "expo-router";
+import { AntDesign, Feather, MaterialIcons } from "@expo/vector-icons";
 import React, { useCallback } from "react";
 import { Pressable, StyleSheet, Text, View } from "react-native";
 import { useDispatch } from "react-redux";
+import { useGameState } from "@/utils/selectors";
 
 type Props = {
-  points: number;
-  lifeCount: number;
   handleBottomSheet: () => void;
 };
 
-const PokeHeader = ({ points, lifeCount, handleBottomSheet }: Props) => {
-  console.log("🚀 ~ PokeHeader ~ lifeCount:", lifeCount);
+const PokeHeader = ({ handleBottomSheet }: Props) => {
+  const { points, lifeCount } = useGameState();
   const dispatch = useDispatch();
   const fetchNewPokemon = useNewPokemon();
-  const router = useRouter();
   const pointsText = usePositivePoints(points);
 
+  // check the life count
+  const lifeCheck: boolean = lifeCount <= 0;
+  const displayLifeCount = lifeCount < 0 ? 0 : lifeCount;
+  const opacity = lifeCheck ? 0.5 : 1;
+
   const handleSkip = useCallback(() => {
-    if (lifeCount <= 0) {
+    // life count is less than 1, so open the GameSheet
+    if (lifeCheck) {
+      dispatch(losePoints(5));
+      dispatch(setHighScore(points));
       handleBottomSheet();
       return;
     }
@@ -54,7 +60,7 @@ const PokeHeader = ({ points, lifeCount, handleBottomSheet }: Props) => {
 
   return (
     <View style={styles.headerContainer}>
-      <View style={{}}>
+      <View>
         <Text style={styles.headerText}>You scored</Text>
         <View style={{ flexDirection: "row" }}>
           {pointsText.map((digit, index) => (
@@ -66,26 +72,23 @@ const PokeHeader = ({ points, lifeCount, handleBottomSheet }: Props) => {
           ))}
         </View>
       </View>
-      <View style={{ position: "relative" }}>
-        <AntDesign name="heart" size={SIZE.lg * 1.5} color={COLORS.danger} />
-        <Text style={styles.lifeText}>{lifeCount}</Text>
-      </View>
-      <View style={STYLES.justify}>
-        <Pressable style={styles.headerBtn} onPress={handleSkip}>
+      <View style={{ ...STYLES.justify, columnGap: SIZE.xl }}>
+        <View style={{ position: "relative" }}>
+          <AntDesign name="heart" size={SIZE.lg * 1.5} color={COLORS.danger} />
+          <Text style={styles.lifeText}>{displayLifeCount}</Text>
+        </View>
+        <Pressable
+          disabled={lifeCheck}
+          style={[styles.headerBtn, { opacity: opacity }]}
+          onPress={handleSkip}
+        >
           <Text style={styles.skipText}>Skip</Text>
           <MaterialIcons name="skip-next" size={SIZE.xl} color={COLORS.white} />
         </Pressable>
-        <Pressable
-          style={[styles.headerBtn, { backgroundColor: `${COLORS.danger}40` }]}
-          onPress={handleReset}
-        >
-          <MaterialIcons
-            name="exit-to-app"
-            size={SIZE.xl}
-            color={COLORS.danger}
-          />
-        </Pressable>
       </View>
+      <Pressable onPress={handleReset}>
+        <Feather name="menu" size={SIZE.xl * 1.5} color={COLORS.white} />
+      </Pressable>
     </View>
   );
 };
@@ -131,7 +134,7 @@ const styles = StyleSheet.create({
   },
   skipText: {
     fontFamily: FONT.mono,
-    fontSize: textScale(18),
+    fontSize: textScale(16),
     color: COLORS.white,
   },
 });

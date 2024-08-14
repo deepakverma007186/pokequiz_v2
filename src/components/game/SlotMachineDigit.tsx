@@ -1,6 +1,6 @@
-import { COLORS } from "@/constants/Colors";
-import { FONT, SIZE } from "@/constants/CommonStyles";
-import { textScale } from "@/constants/Responsive";
+import { COLORS } from "@/utils/Colors";
+import { FONT, SIZE } from "@/utils/CommonStyles";
+import { textScale } from "@/utils/Responsive";
 import React, { useEffect } from "react";
 import { StyleSheet, Text, View } from "react-native";
 import Animated, {
