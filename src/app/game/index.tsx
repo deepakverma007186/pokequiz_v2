@@ -1,5 +1,5 @@
+import GameLoading from "@/components/game/GameLoading";
 import GameSheet from "@/components/GameSheet";
-import Loading from "@/components/Loading";
 import { COLORS } from "@/utils/Colors";
 import { SIZE } from "@/utils/CommonStyles";
 import { width } from "@/utils/Responsive";
@@ -55,11 +55,13 @@ export default function GameScreen() {
         contentContainerStyle={{ flexGrow: 1, paddingBottom: SIZE.xl }}
         showsVerticalScrollIndicator={false}
       >
-        <PokemonPic />
         {isLoading ? (
-          <Loading />
+          <GameLoading isLoading={isLoading} />
         ) : (
-          <ChooseOptions handleBottomSheet={handleBottomSheet} />
+          <>
+            <PokemonPic />
+            <ChooseOptions handleBottomSheet={handleBottomSheet} />
+          </>
         )}
       </ScrollView>
       <BottomSheetModal
