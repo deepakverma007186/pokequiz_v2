@@ -1,5 +1,5 @@
-import { COLORS } from "@/utils/Colors";
 import { store } from "@/store";
+import { COLORS } from "@/utils/Colors";
 import { BottomSheetModalProvider } from "@gorhom/bottom-sheet";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -49,7 +49,7 @@ export default function RootLayout() {
               }}
             />
             <Stack.Screen
-              name="game/index"
+              name="game"
               options={{ title: "Game", animation: "slide_from_right" }}
             />
             <Stack.Screen

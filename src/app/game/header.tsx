@@ -40,7 +40,7 @@ const PokeHeader = ({ handleBottomSheet }: Props) => {
     // life count is less than 1, so open the GameSheet
     if (lifeCheck) {
       dispatch(losePoints(5));
-      dispatch(setHighScore(points));
+      dispatch(setHighScore());
       handleBottomSheet();
       return;
     }

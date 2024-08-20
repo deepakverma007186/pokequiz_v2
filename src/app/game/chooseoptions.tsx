@@ -24,8 +24,7 @@ type Props = {
 };
 
 const ChooseOptions = ({ handleBottomSheet }: Props) => {
-  const { isLoading, currentPokemon, points, lifeCount, options } =
-    useGameState();
+  const { isLoading, currentPokemon, lifeCount, options } = useGameState();
   const dispatch = useDispatch();
   const fetchNewPokemon = useNewPokemon();
   // check the life count

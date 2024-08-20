@@ -1,7 +1,6 @@
 import { IMG } from "@/assets/images";
 import BottomSection from "@/components/home/BottomSection";
-import useFetchRandomPokemon from "@/hooks/useFetchRandomPokemon";
-import { setOptions, setPokemon } from "@/store/gameSlice";
+import { START, SURPRISE_ME } from "@/utils";
 import { COLORS } from "@/utils/Colors";
 import { FONT, SIZE, STYLES } from "@/utils/CommonStyles";
 import {
@@ -11,31 +10,69 @@ import {
   width,
 } from "@/utils/Responsive";
 import AntDesign from "@expo/vector-icons/AntDesign";
-import { Link } from "expo-router";
-import React, { useCallback } from "react";
-import { Image, Pressable, StyleSheet, Text, View } from "react-native";
-import { useDispatch } from "react-redux";
+import { Href, useRouter } from "expo-router";
+import React, { useEffect } from "react";
+import {
+  DeviceEventEmitter,
+  Image,
+  Pressable,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
+import QuickActions, { ShortcutItem } from "react-native-quick-actions";
 
 type Props = {};
 
 export default function Home(props: Props) {
-  const dispatch = useDispatch();
+  const router = useRouter();
 
-  const fetchPokemon = useCallback(async () => {
-    console.log("fetchPokemon function all");
-    try {
-      const randromPokemon = await useFetchRandomPokemon();
-      dispatch(
-        setPokemon({
-          name: randromPokemon?.name,
-          imgUri:
-            randromPokemon?.sprites?.other?.["official-artwork"]?.front_default,
-        })
-      );
-      dispatch(setOptions(randromPokemon));
-    } catch (error) {
-      console.error("Failed to fetch pokemon:", error);
-    }
+  useEffect(() => {
+    const processActions = (action: ShortcutItem) => {
+      console.log("action called", action);
+      const navigateTo = action.userInfo.url as string;
+      router.push(navigateTo as Href);
+      // router.replace("/");
+    };
+    QuickActions.setShortcutItems([
+      {
+        type: START,
+        title: "Start new game",
+        subtitle: "Let's score more and beat the high score.",
+        icon: START,
+        userInfo: {
+          url: "/game",
+        },
+      },
+      {
+        type: SURPRISE_ME,
+        title: "Surprise Pokemon",
+        subtitle: "Welcome to the world of pokemon.",
+        icon: SURPRISE_ME,
+        userInfo: {
+          url: "/profile",
+        },
+      },
+    ]);
+
+    // app is in exit mode
+    QuickActions.popInitialAction()
+      .then(processActions)
+      .catch((error) => {
+        console.log("Quick Action Error", error);
+      });
+
+    // app running in background
+    const quickActionShortcut = DeviceEventEmitter.addListener(
+      "quickActionShortcut",
+      processActions
+    );
+
+    return () => {
+      QuickActions.clearShortcutItems();
+      // DeviceEventEmitter.removeAllListeners();
+      quickActionShortcut.remove();
+    };
   }, []);
 
   return (
@@ -50,14 +87,15 @@ export default function Home(props: Props) {
         </View>
         <Text style={styles.title}>PokeQuiz</Text>
       </View>
-      <Link href={"/game"} asChild>
-        <Pressable style={styles.startBtnContainer} onPress={fetchPokemon}>
-          <AntDesign name="playcircleo" size={100} color={COLORS.secondary} />
-          <Text style={{ ...styles.text, color: COLORS.secondary }}>
-            Let's Start
-          </Text>
-        </Pressable>
-      </Link>
+      <Pressable
+        style={styles.startBtnContainer}
+        onPress={() => router.replace("/game")}
+      >
+        <AntDesign name="playcircleo" size={100} color={COLORS.secondary} />
+        <Text style={{ ...styles.text, color: COLORS.secondary }}>
+          Let's Start
+        </Text>
+      </Pressable>
       <BottomSection />
     </View>
   );

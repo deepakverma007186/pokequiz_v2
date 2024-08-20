@@ -1,4 +1,3 @@
-import { COLORS } from "@/utils/Colors";
 import { SIZE } from "@/utils/CommonStyles";
 import {
   moderateScale,
@@ -17,12 +16,17 @@ interface GameLoadingProps {
 }
 
 export default function GameLoading({ isLoading }: GameLoadingProps) {
+  const shimmerColors = [
+    `rgba(0, 117, 190, 0.1)`,
+    `rgba(0, 117, 190, 0.4)`,
+    `rgba(0, 117, 190, 0.1)`,
+  ];
   return (
     <View style={styles.container}>
       <View style={styles.imgContainer}>
         <Shimmer
           visible={!isLoading}
-          shimmerColors={[COLORS.primary, COLORS.background, COLORS.primary]}
+          shimmerColors={shimmerColors}
           style={{ width: "100%", height: "100%" }}
         ></Shimmer>
       </View>
@@ -32,7 +36,7 @@ export default function GameLoading({ isLoading }: GameLoadingProps) {
             key={index}
             style={styles.btn}
             visible={!isLoading}
-            shimmerColors={[COLORS.primary, COLORS.background, COLORS.primary]}
+            shimmerColors={shimmerColors}
           ></Shimmer>
         ))}
       </View>
@@ -49,23 +53,22 @@ const styles = StyleSheet.create({
     aspectRatio: 1 / 1,
     alignSelf: "center",
     marginTop: SIZE.xl,
-    backgroundColor: "red",
     overflow: "hidden",
     borderRadius: SIZE.lg,
   },
   optionsContainer: {
     flex: 1,
     width: width * 0.9,
+    alignSelf: "center",
     marginTop: moderateScaleVertical(20),
     marginHorizontal: moderateScale(16),
   },
   btn: {
     width: "100%",
-    height: "15%",
-    backgroundColor: COLORS.primary,
+    height: "16%",
     marginVertical: moderateScaleVertical(10),
-    padding: moderateScale(10),
     borderRadius: SIZE.xs,
     borderCurve: "continuous",
+    overflow: "hidden",
   },
 });
