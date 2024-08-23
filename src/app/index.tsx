@@ -11,7 +11,7 @@ import {
 } from "@/utils/Responsive";
 import AntDesign from "@expo/vector-icons/AntDesign";
 import { Href, useRouter } from "expo-router";
-import React, { useEffect } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   DeviceEventEmitter,
   Image,
@@ -27,13 +27,13 @@ type Props = {};
 export default function Home(props: Props) {
   const router = useRouter();
 
+  const processActions = useCallback((action: ShortcutItem) => {
+    console.log("action called", action);
+    const navigateTo = action.userInfo.url as string;
+    router.push(navigateTo as Href);
+    // router.replace("/");
+  }, []);
   useEffect(() => {
-    const processActions = (action: ShortcutItem) => {
-      console.log("action called", action);
-      const navigateTo = action.userInfo.url as string;
-      router.push(navigateTo as Href);
-      // router.replace("/");
-    };
     QuickActions.setShortcutItems([
       {
         type: START,
@@ -50,7 +50,7 @@ export default function Home(props: Props) {
         subtitle: "Welcome to the world of pokemon.",
         icon: SURPRISE_ME,
         userInfo: {
-          url: "/profile",
+          url: "/pokepedia",
         },
       },
     ]);

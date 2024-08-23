@@ -12,3 +12,9 @@ export type GameState = {
   isLoading: boolean;
   highScore: number;
 };
+
+export type PokeObject = {
+  id: string;
+  name: string;
+  url: string;
+};

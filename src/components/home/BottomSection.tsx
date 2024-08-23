@@ -21,7 +21,7 @@ export default function BottomSection(props: Props) {
   const { highScore } = useSelector((state: RootState) => state.gamePokemon);
   return (
     <View style={styles.bottomSection}>
-      <Link href={"/profile"} asChild>
+      <Link href={"/pokepedia"} asChild>
         <Pressable style={styles.encycloBtn}>
           <Text style={styles.encycloBtnText}>Pokepedia</Text>
           <MaterialIcons name="explore" size={30} color={COLORS.secondary} />

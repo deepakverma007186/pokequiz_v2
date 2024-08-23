@@ -17,9 +17,9 @@ interface GameLoadingProps {
 
 export default function GameLoading({ isLoading }: GameLoadingProps) {
   const shimmerColors = [
-    `rgba(0, 117, 190, 0.1)`,
-    `rgba(0, 117, 190, 0.4)`,
-    `rgba(0, 117, 190, 0.1)`,
+    `rgba(0, 117, 190, 0.2)`,
+    `rgba(0, 117, 190, 0.5)`,
+    `rgba(0, 117, 190, 0.2)`,
   ];
   return (
     <View style={styles.container}>

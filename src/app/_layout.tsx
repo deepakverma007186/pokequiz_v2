@@ -53,8 +53,8 @@ export default function RootLayout() {
               options={{ title: "Game", animation: "slide_from_right" }}
             />
             <Stack.Screen
-              name="profile/index"
-              options={{ title: "Profile", animation: "slide_from_right" }}
+              name="pokepedia"
+              options={{ title: "Pokepedia", animation: "slide_from_right" }}
             />
             <Stack.Screen
               name="settings"

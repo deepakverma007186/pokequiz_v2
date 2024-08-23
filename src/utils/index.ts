@@ -1,4 +1,4 @@
-export const LOADING_TIMEOUT: number = 2000;
+export const LOADING_TIMEOUT: number = 1000;
 
 export const GAIN: number = 10;
 
