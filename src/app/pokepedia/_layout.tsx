@@ -1,21 +1,20 @@
-import Header from "@/components/Header";
-import { moderateScale } from "@/utils/Responsive";
-import { Slot } from "expo-router";
+import { COLORS } from "@/utils/Colors";
+import { Stack } from "expo-router";
 import React from "react";
-import { StyleSheet, View } from "react-native";
 
 export default function Layout() {
   return (
-    <View style={styles.container}>
-      <Header title="Pokepedia" />
-      <Slot />
-    </View>
+    <Stack
+      screenOptions={{
+        headerShown: false,
+        contentStyle: { backgroundColor: COLORS.background },
+      }}
+    >
+      <Stack.Screen name="index" />
+      <Stack.Screen
+        name="profile/[id]"
+        options={{ animation: "slide_from_right" }}
+      />
+    </Stack>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingHorizontal: moderateScale(16),
-  },
-});

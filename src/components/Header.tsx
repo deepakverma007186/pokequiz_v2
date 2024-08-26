@@ -1,21 +1,14 @@
-import {
-  Pressable,
-  StyleSheet,
-  StyleSheetProperties,
-  Text,
-  View,
-  ViewProps,
-} from "react-native";
-import React from "react";
-import { Ionicons } from "@expo/vector-icons";
 import { COLORS } from "@/utils/Colors";
+import { FONT } from "@/utils/CommonStyles";
 import {
   moderateScale,
   moderateScaleVertical,
   textScale,
 } from "@/utils/Responsive";
-import { FONT } from "@/utils/CommonStyles";
+import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
+import React from "react";
+import { Pressable, StyleSheet, Text, View, ViewProps } from "react-native";
 
 interface HeaderProps {
   title?: string;
@@ -48,11 +41,11 @@ const styles = StyleSheet.create({
     justifyContent: "flex-start",
     columnGap: moderateScale(20),
     paddingVertical: moderateScaleVertical(12),
+    paddingHorizontal: moderateScale(16),
   },
   title: {
     fontFamily: FONT.mono,
     fontSize: textScale(20),
     color: COLORS.secondary,
-    // letterSpacing: 4,
   },
 });

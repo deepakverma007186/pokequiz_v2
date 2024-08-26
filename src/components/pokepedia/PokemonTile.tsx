@@ -1,18 +1,14 @@
-import {
-  StyleSheet,
-  Text,
-  TouchableOpacity,
-  View,
-  ViewToken,
-} from "react-native";
-import React from "react";
+import { TRIM_LENGTH } from "@/utils";
+import { COLORS } from "@/utils/Colors";
+import { FONT, SIZE } from "@/utils/CommonStyles";
 import {
   moderateScale,
   moderateScaleVertical,
   textScale,
 } from "@/utils/Responsive";
-import { COLORS } from "@/utils/Colors";
-import { FONT, SIZE } from "@/utils/CommonStyles";
+import { useRouter } from "expo-router"; // Updated to use useRouter
+import React from "react";
+import { StyleSheet, Text, TouchableOpacity, ViewToken } from "react-native";
 import Animated, {
   SharedValue,
   useAnimatedStyle,
@@ -21,6 +17,7 @@ import Animated, {
 
 interface PokemonTileProps {
   item: {
+    id: string;
     name: string;
     url: string;
   };
@@ -28,12 +25,18 @@ interface PokemonTileProps {
 }
 
 export default function PokemonTile({ item, viewableItems }: PokemonTileProps) {
+  const router = useRouter(); // Initialize router using useRouter hook
+
   const pokemonNumber = item?.url.split("/").at(-2);
+  const pokemonName =
+    item?.name?.length >= TRIM_LENGTH
+      ? item?.name.slice(0, TRIM_LENGTH) + "..."
+      : item?.name;
 
   const rStyle = useAnimatedStyle(() => {
     const isVisible = Boolean(
       viewableItems.value
-        .filter((item) => item.isViewable)
+        .filter((viewItem) => viewItem.isViewable)
         .find((viewableItem) => viewableItem.item.name === item.name)
     );
 
@@ -47,15 +50,24 @@ export default function PokemonTile({ item, viewableItems }: PokemonTileProps) {
     };
   }, []);
 
+  const params = new URLSearchParams({
+    name: item?.name,
+    url: item?.url,
+  }).toString();
+
   return (
     <Animated.View style={rStyle}>
-      <TouchableOpacity activeOpacity={0.8} style={styles.container}>
+      <TouchableOpacity
+        activeOpacity={0.8}
+        style={styles.container}
+        onPress={() => router.push(`/profile/${item.id}?${params}`)} // Correct navigation path
+      >
         <Text style={styles.text}>#{pokemonNumber}</Text>
         <Text
           style={[styles.text, { fontSize: textScale(26) }]}
           numberOfLines={1}
         >
-          {item?.name}
+          {pokemonName}
         </Text>
       </TouchableOpacity>
     </Animated.View>
@@ -69,7 +81,6 @@ const styles = StyleSheet.create({
     paddingVertical: moderateScaleVertical(10),
     backgroundColor: COLORS.primary,
     borderRadius: SIZE.lg,
-    borderCurve: "continuous",
     paddingHorizontal: moderateScale(16),
     columnGap: SIZE.xl,
   },

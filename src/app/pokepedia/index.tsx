@@ -1,4 +1,5 @@
 import { ANIMATIONS } from "@/assets/animation";
+import Header from "@/components/Header";
 import PokemonTile from "@/components/pokepedia/PokemonTile";
 import useTodaysFifty from "@/hooks/useTodayFifty";
 import { COLORS } from "@/utils/Colors";
@@ -30,31 +31,35 @@ export default function Pokepedia() {
   const todaysFifty = useTodaysFifty();
 
   return (
-    <View style={styles.container}>
-      <FlatList
-        data={todaysFifty}
-        keyExtractor={(item) => item.name}
-        renderItem={({ item }) => (
-          <PokemonTile item={item} viewableItems={viewableItems} />
-        )}
-        showsVerticalScrollIndicator={false}
-        onViewableItemsChanged={({ viewableItems: vItems }) =>
-          (viewableItems.value = vItems)
-        }
-        contentContainerStyle={{
-          gap: moderateScaleVertical(12),
-          paddingVertical: moderateScaleVertical(20),
-        }}
-        scrollEventThrottle={16}
-        ListEmptyComponent={ListEmptyComponent}
-      />
-    </View>
+    <>
+      <Header title="Pokepedia" />
+      <View style={styles.container}>
+        <FlatList
+          data={todaysFifty}
+          keyExtractor={(item) => item.name}
+          renderItem={({ item }) => (
+            <PokemonTile item={item} viewableItems={viewableItems} />
+          )}
+          showsVerticalScrollIndicator={false}
+          onViewableItemsChanged={({ viewableItems: vItems }) =>
+            (viewableItems.value = vItems)
+          }
+          contentContainerStyle={{
+            gap: moderateScaleVertical(12),
+            paddingVertical: moderateScaleVertical(20),
+          }}
+          scrollEventThrottle={16}
+          ListEmptyComponent={ListEmptyComponent}
+        />
+      </View>
+    </>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    paddingHorizontal: moderateScale(16),
   },
   emptyContainer: {
     flex: 1,

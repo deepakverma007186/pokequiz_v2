@@ -22,14 +22,6 @@ const SECTIONS = [
   { title: "Amenities", content: "Amenities content..." },
   { title: "Price & floor plan", content: "Price & floor plan content..." },
   { title: "Image tour", content: "Image tour content..." },
-  { title: "Brochure", content: "Brochure content..." },
-  { title: "Neighbourhood", content: "Neighbourhood content..." },
-  { title: "Ratings & Reviews", content: "Ratings & Reviews content..." },
-  { title: "Listings", content: "Listings content..." },
-  { title: "Feedback", content: "Feedback content..." },
-  { title: "About Locality", content: "About Locality content..." },
-  { title: "Contact", content: "Contact content..." },
-  { title: "Q&A", content: "Q&A content..." },
 ];
 
 const Tab = ({ title, isActive, onPress }: any) => {
@@ -49,14 +41,16 @@ const Tab = ({ title, isActive, onPress }: any) => {
   );
 };
 
-const Settings = () => {
+const ScrollWithTabs = () => {
   const scrollY = useSharedValue(0);
   const [activeIndex, setActiveIndex] = useState(0);
+
+  // Correctly type your animated refs for ScrollViews
   const verticalScrollRef = useAnimatedRef<Animated.ScrollView>();
   const tabScrollRef = useAnimatedRef<Animated.ScrollView>();
 
-  // Store the layout positions of each section
-  const snapTo = useRef<number[]>([]);
+  // Correctly type your refs for sections
+  const sectionRefs = useRef<(View | null)[]>(SECTIONS.map(() => null));
 
   const updateActiveIndex = useCallback((index: number) => {
     if (index < 0) return;
@@ -67,32 +61,21 @@ const Settings = () => {
   const onScrollVertical = useAnimatedScrollHandler({
     onScroll: (event) => {
       scrollY.value = event.contentOffset.y;
-      const currentScroll = scrollY.value;
-      const midpoint = currentScroll + SCREEN_HEIGHT / 2;
-
-      // Find the index of the section whose top is closest to the scroll midpoint
-      const closestIndex = snapTo.current.findIndex(
-        (layoutY, index) =>
-          layoutY <= midpoint &&
-          (index === snapTo.current.length - 1 ||
-            snapTo.current[index + 1] > midpoint)
-      );
-      // console.log("🚀 ~ Settings ~ closestIndex:", closestIndex);
-
-      // Update only if the index has changed
-      if (closestIndex !== activeIndex && closestIndex >= 0) {
-        runOnJS(updateActiveIndex)(closestIndex);
+      const newIndex = Math.floor(scrollY.value / (SCREEN_HEIGHT * 0.4));
+      if (newIndex !== activeIndex) {
+        runOnJS(updateActiveIndex)(newIndex);
       }
     },
   });
 
   const scrollToSection = (index: number) => {
-    if (snapTo.current.length > index) {
-      verticalScrollRef.current?.scrollTo({
-        y: snapTo.current[index],
-        animated: true,
+    const ref = sectionRefs.current[index];
+    if (ref) {
+      ref.measure((fx, fy, width, height, px, py) => {
+        verticalScrollRef.current?.scrollTo({ y: py, animated: true });
       });
     }
+    updateActiveIndex(index);
   };
 
   return (
@@ -116,16 +99,12 @@ const Settings = () => {
         ref={verticalScrollRef}
         onScroll={onScrollVertical}
         scrollEventThrottle={16}
-        // showsVerticalScrollIndicator={false}
       >
         {SECTIONS.map((section, index) => (
           <View
             key={section.title}
+            ref={(el) => (sectionRefs.current[index] = el)}
             style={styles.section}
-            onLayout={(event) => {
-              const layout = event.nativeEvent.layout;
-              snapTo.current[index] = layout.y;
-            }}
           >
             <Text style={styles.sectionTitle}>{section.title}</Text>
             <Text>{section.content}</Text>
@@ -162,4 +141,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default Settings;
+export default ScrollWithTabs;

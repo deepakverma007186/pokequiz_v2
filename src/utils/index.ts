@@ -11,3 +11,5 @@ export const INITIAL_LIFE_COUNT: number = 3;
 export const START: string = "start";
 
 export const SURPRISE_ME: string = "surprise_me";
+
+export const TRIM_LENGTH: number = 15;

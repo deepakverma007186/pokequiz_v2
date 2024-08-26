@@ -1,12 +1,10 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
 
-type Props = {};
-
-export default function Rules(props: Props) {
+export default function Rules() {
   return (
     <View>
-      <Text>Rules</Text>
+      <Text>rules</Text>
     </View>
   );
 }
