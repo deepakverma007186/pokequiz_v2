@@ -12,7 +12,14 @@ import {
 } from "@/utils/Responsive";
 import LottieView from "lottie-react-native";
 import React from "react";
-import { FlatList, StyleSheet, Text, View, ViewToken } from "react-native";
+import {
+  FlatList,
+  StatusBar,
+  StyleSheet,
+  Text,
+  View,
+  ViewToken,
+} from "react-native";
 import { useSharedValue } from "react-native-reanimated";
 
 const ListEmptyComponent = () => (
@@ -31,35 +38,33 @@ export default function Pokepedia() {
   const todaysFifty = useTodaysFifty();
 
   return (
-    <>
+    <View style={styles.container}>
       <Header title="Pokepedia" />
-      <View style={styles.container}>
-        <FlatList
-          data={todaysFifty}
-          keyExtractor={(item) => item.name}
-          renderItem={({ item }) => (
-            <PokemonTile item={item} viewableItems={viewableItems} />
-          )}
-          showsVerticalScrollIndicator={false}
-          onViewableItemsChanged={({ viewableItems: vItems }) =>
-            (viewableItems.value = vItems)
-          }
-          contentContainerStyle={{
-            gap: moderateScaleVertical(12),
-            paddingVertical: moderateScaleVertical(20),
-          }}
-          scrollEventThrottle={16}
-          ListEmptyComponent={ListEmptyComponent}
-        />
-      </View>
-    </>
+      <FlatList
+        data={todaysFifty}
+        keyExtractor={(item) => item.name}
+        renderItem={({ item }) => (
+          <PokemonTile item={item} viewableItems={viewableItems} />
+        )}
+        showsVerticalScrollIndicator={false}
+        onViewableItemsChanged={({ viewableItems: vItems }) =>
+          (viewableItems.value = vItems)
+        }
+        contentContainerStyle={{
+          gap: moderateScaleVertical(12),
+          padding: moderateScaleVertical(20),
+        }}
+        scrollEventThrottle={16}
+        ListEmptyComponent={ListEmptyComponent}
+      />
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: moderateScale(16),
+    // paddingTop: StatusBar.currentHeight,
   },
   emptyContainer: {
     flex: 1,

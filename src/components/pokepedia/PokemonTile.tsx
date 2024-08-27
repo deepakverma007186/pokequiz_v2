@@ -6,7 +6,7 @@ import {
   moderateScaleVertical,
   textScale,
 } from "@/utils/Responsive";
-import { useRouter } from "expo-router"; // Updated to use useRouter
+import { Href, useRouter } from "expo-router"; // Updated to use useRouter
 import React from "react";
 import { StyleSheet, Text, TouchableOpacity, ViewToken } from "react-native";
 import Animated, {
@@ -60,7 +60,9 @@ export default function PokemonTile({ item, viewableItems }: PokemonTileProps) {
       <TouchableOpacity
         activeOpacity={0.8}
         style={styles.container}
-        onPress={() => router.push(`/profile/${item.id}?${params}`)} // Correct navigation path
+        onPress={() =>
+          router.push(`/pokepedia/profile/${item.id}?${params}` as Href)
+        }
       >
         <Text style={styles.text}>#{pokemonNumber}</Text>
         <Text

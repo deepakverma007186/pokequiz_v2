@@ -4,18 +4,32 @@ import {
   moderateScale,
   moderateScaleVertical,
   textScale,
+  width,
 } from "@/utils/Responsive";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React from "react";
-import { Pressable, StyleSheet, Text, View, ViewProps } from "react-native";
+import {
+  Pressable,
+  StyleProp,
+  StyleSheet,
+  Text,
+  TextStyle,
+  View,
+  ViewStyle,
+} from "react-native";
 
 interface HeaderProps {
   title?: string;
-  containerStyle?: ViewProps;
+  titleStyle?: StyleProp<TextStyle>;
+  containerStyle?: StyleProp<ViewStyle>;
 }
 
-export default function Header({ title, containerStyle }: HeaderProps) {
+export default function Header({
+  title,
+  titleStyle,
+  containerStyle,
+}: HeaderProps) {
   return (
     <View style={[styles.container, containerStyle]}>
       <Pressable
@@ -27,7 +41,7 @@ export default function Header({ title, containerStyle }: HeaderProps) {
           size={textScale(20)}
         />
       </Pressable>
-      <Text style={styles.title} numberOfLines={1}>
+      <Text style={[styles.title, titleStyle]} numberOfLines={1}>
         {title}
       </Text>
     </View>
@@ -42,10 +56,12 @@ const styles = StyleSheet.create({
     columnGap: moderateScale(20),
     paddingVertical: moderateScaleVertical(12),
     paddingHorizontal: moderateScale(16),
+    width: width,
   },
   title: {
     fontFamily: FONT.mono,
     fontSize: textScale(20),
     color: COLORS.secondary,
+    textTransform: "capitalize",
   },
 });
