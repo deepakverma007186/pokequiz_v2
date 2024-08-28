@@ -1,5 +1,6 @@
 import { IMG } from "@/assets/images";
 import BottomSection from "@/components/home/BottomSection";
+import { useQuickActionCallback } from "@/hooks/useQuickActionCallback";
 import { START, SURPRISE_ME } from "@/utils";
 import { COLORS } from "@/utils/Colors";
 import { FONT, SIZE, STYLES } from "@/utils/CommonStyles";
@@ -10,71 +11,44 @@ import {
   width,
 } from "@/utils/Responsive";
 import AntDesign from "@expo/vector-icons/AntDesign";
+import * as QuickActions from "expo-quick-actions";
 import { Href, useRouter } from "expo-router";
-import React, { useCallback, useEffect } from "react";
-import {
-  DeviceEventEmitter,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
-import QuickActions, { ShortcutItem } from "react-native-quick-actions";
+import React, { useEffect } from "react";
+import { Image, Pressable, StyleSheet, Text, View } from "react-native";
 
 type Props = {};
 
 export default function Home(props: Props) {
   const router = useRouter();
 
-  const processActions = useCallback((action: ShortcutItem) => {
-    console.log("action called", action);
-    const navigateTo = action.userInfo.url as string;
-    router.push(navigateTo as Href);
-    // router.replace("/");
-  }, []);
   useEffect(() => {
-    QuickActions.setShortcutItems([
+    QuickActions.setItems([
       {
-        type: START,
+        id: "0",
         title: "Start new game",
         subtitle: "Let's score more and beat the high score.",
         icon: START,
-        userInfo: {
-          url: "/game",
+        params: {
+          href: "/game",
         },
       },
       {
-        type: SURPRISE_ME,
+        id: "1",
         title: "Surprise Pokemon",
         subtitle: "Welcome to the world of pokemon.",
         icon: SURPRISE_ME,
-        userInfo: {
-          url: "/pokepedia",
+        params: {
+          href: "/pokepedia",
         },
       },
     ]);
-
-    // app is in exit mode
-    QuickActions.popInitialAction()
-      .then(processActions)
-      .catch((error) => {
-        console.log("Quick Action Error", error);
-      });
-
-    // app running in background
-    const quickActionShortcut = DeviceEventEmitter.addListener(
-      "quickActionShortcut",
-      processActions
-    );
-
-    return () => {
-      QuickActions.clearShortcutItems();
-      // DeviceEventEmitter.removeAllListeners();
-      quickActionShortcut.remove();
-    };
   }, []);
-
+  useQuickActionCallback((action) => {
+    const href = action.params?.href;
+    if (href && typeof href === "string") {
+      router.navigate(href as Href);
+    }
+  });
   return (
     <View style={styles.container}>
       <View style={[STYLES.flexRow, styles.titleLogo]}>
