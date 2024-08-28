@@ -41,13 +41,7 @@ export default function RootLayout() {
               },
             }}
           >
-            <Stack.Screen
-              name="index"
-              options={{
-                title: "Home",
-                animationTypeForReplace: "pop",
-              }}
-            />
+            <Stack.Screen name="index" options={{ title: "Home" }} />
             <Stack.Screen
               name="game"
               options={{ title: "Game", animation: "slide_from_right" }}

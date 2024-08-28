@@ -21,34 +21,34 @@ type Props = {};
 export default function Home(props: Props) {
   const router = useRouter();
 
-  useEffect(() => {
-    QuickActions.setItems([
-      {
-        id: "0",
-        title: "Start new game",
-        subtitle: "Let's score more and beat the high score.",
-        icon: START,
-        params: {
-          href: "/game",
-        },
-      },
-      {
-        id: "1",
-        title: "Surprise Pokemon",
-        subtitle: "Welcome to the world of pokemon.",
-        icon: SURPRISE_ME,
-        params: {
-          href: "/pokepedia",
-        },
-      },
-    ]);
-  }, []);
-  useQuickActionCallback((action) => {
-    const href = action.params?.href;
-    if (href && typeof href === "string") {
-      router.navigate(href as Href);
-    }
-  });
+  // useEffect(() => {
+  //   QuickActions.setItems([
+  //     {
+  //       id: "0",
+  //       title: "Start new game",
+  //       subtitle: "Let's score more and beat the high score.",
+  //       icon: START,
+  //       params: {
+  //         href: "/game",
+  //       },
+  //     },
+  //     {
+  //       id: "1",
+  //       title: "Surprise Pokemon",
+  //       subtitle: "Welcome to the world of pokemon.",
+  //       icon: SURPRISE_ME,
+  //       params: {
+  //         href: "/pokepedia",
+  //       },
+  //     },
+  //   ]);
+  // }, []);
+  // useQuickActionCallback((action) => {
+  //   const href = action.params?.href;
+  //   if (href && typeof href === "string") {
+  //     router.navigate(href as Href);
+  //   }
+  // });
   return (
     <View style={styles.container}>
       <View style={[STYLES.flexRow, styles.titleLogo]}>

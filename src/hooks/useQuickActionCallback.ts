@@ -14,6 +14,8 @@ function popInitialAction() {
 
   let result = _initialAction;
   _initialAction = undefined;
+  console.log("🚀 ~ popInitialAction ~ _initialAction:", _initialAction);
+
   return result;
 }
 

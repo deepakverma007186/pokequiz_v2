@@ -13,9 +13,9 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import ChooseOptions from "./(sections)/chooseoptions";
-import PokeHeader from "./(sections)/header";
-import PokemonPic from "./(sections)/pokemonpic";
+import ChooseOptions from "../../components/game/chooseoptions";
+import PokeHeader from "../../components/game/header";
+import PokemonPic from "../../components/game/pokemonpic";
 
 export default function GameScreen() {
   const { isLoading } = useGameState();
