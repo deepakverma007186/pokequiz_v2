@@ -59,9 +59,10 @@ const styles = StyleSheet.create({
     width: width,
   },
   title: {
-    fontFamily: FONT.mono,
+    fontFamily: FONT.solid,
     fontSize: textScale(20),
     color: COLORS.secondary,
     textTransform: "capitalize",
+    letterSpacing: 4,
   },
 });

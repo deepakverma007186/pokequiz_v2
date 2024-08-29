@@ -18,3 +18,30 @@ export type PokeObject = {
   name: string;
   url: string;
 };
+
+export interface StatsProps {
+  base_stat: number;
+  effort: number;
+  stat: {
+    name: string;
+  };
+}
+
+export interface PokeCardProps {
+  sprites: {
+    other: {
+      "official-artwork": {
+        front_default: string;
+      };
+    };
+  };
+  name: string;
+  types: {
+    type: {
+      name: string;
+    };
+  }[];
+  height: number;
+  weight: number;
+  stats: StatsProps[];
+}

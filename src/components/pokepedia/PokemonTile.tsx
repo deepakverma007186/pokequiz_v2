@@ -65,10 +65,7 @@ export default function PokemonTile({ item, viewableItems }: PokemonTileProps) {
         }
       >
         <Text style={styles.text}>#{pokemonNumber}</Text>
-        <Text
-          style={[styles.text, { fontSize: textScale(26) }]}
-          numberOfLines={1}
-        >
+        <Text style={styles.nameText} numberOfLines={1}>
           {pokemonName}
         </Text>
       </TouchableOpacity>
@@ -87,9 +84,15 @@ const styles = StyleSheet.create({
     columnGap: SIZE.xl,
   },
   text: {
-    fontFamily: FONT.solid,
+    fontFamily: FONT.mono,
     color: COLORS.secondary,
     fontSize: textScale(16),
+    textTransform: "capitalize",
+  },
+  nameText: {
+    fontFamily: FONT.solid,
+    color: COLORS.secondary,
+    fontSize: textScale(26),
     letterSpacing: 2,
     textTransform: "capitalize",
   },
